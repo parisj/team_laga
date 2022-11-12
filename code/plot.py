@@ -3,15 +3,15 @@ import matplotlib.pyplot as plt
 
 from pyproj import Transformer
 
-# plt.style.use('dark_background')
+plt.style.use('dark_background')
 transformer = Transformer.from_crs('epsg:4326', 'epsg:3857')
 
-def plot_multipoly(multipoly, c='w'):
+def plot_multipoly(multipoly):
     fig, ax = plt.subplots()
     for poly in multipoly:
         tmp = poly.exterior.xy
         x, y = transformer.transform(tmp[1], tmp[0])
-        ax.plot(x, y, c=c, lw=0.1)
+        ax.plot(x, y, c='#008f11', lw=0.5)
     ax.axis('off')
     # ax.xaxis.set_visible(False)
     # ax.yaxis.set_visible(False)

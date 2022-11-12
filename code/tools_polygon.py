@@ -27,7 +27,7 @@ def plot_multipoly(multipoly):
     fig, ax = plt.subplots()
     for poly in multipoly:
         
-        #Scale and shif polygono points
+        #Scale and shift polygono points
         tmp = poly.exterior.xy
         x, y = transformer.transform(tmp[1], tmp[0])
         ax.plot(x, y)
@@ -223,9 +223,9 @@ def create_poly_with_indices(indices, file):
 
 
 if __name__ == "__main__": 
-    path_data_30 = "code/data/tempo-30-zonen.csv"
-    path_strassenplan = "code/data/gemeindestrassenplan.csv"
-    path_begegnungszonen = "code/data/begegnungszonen.csv"
+    path_data_30 = "data/tempo-30-zonen.csv"
+    path_strassenplan = "data/gemeindestrassenplan.csv"
+    path_begegnungszonen = "data/begegnungszonen.csv"
     intersection = import_intersection(path_strassenplan, path_data_30, path_begegnungszonen)
     #print(intersection)
     plot_multipoly(create_multipolygon(path_strassenplan, area=False))
