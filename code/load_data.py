@@ -26,7 +26,7 @@ gemeindestrassen = pd.read_csv("data/gemeindestrassenplan.csv", sep=";")
 # Average radius of earth [m] (±10km)
 r = 6371000
 
-max_distance = []
+widths_all = []
 # for i in range(0, gemeindestrassen.shape[0]):
 for i in range(0, 6):
     # Load data
@@ -58,10 +58,12 @@ for i in range(0, 6):
         p = gpd.GeoDataFrame(centerline)
         p = p.set_geometry(0)
 
-        max_distance.append(p.distance(polygon.exterior).max())
-        print(max_distance[-1])
+        widths = p.distance(polygon.exterior)
+        width_lower_end = 2 * (widths.mean() - widths.std())
+
+        widths_all.append(width_lower_end)
+        print(widths_all[-1])
         print(centerline.length/2)
-        breakpoint()
     except:
         print("Error 420")
         
