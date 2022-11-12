@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 
 import matplotlib.pyplot as plt
+from matplotlib import cm
 
 from shapely.geometry import Polygon
 from shapely.geometry import LineString
@@ -23,8 +24,16 @@ z = r_earth * np.cos(np.radians(data[:, 0]))
 data = np.array([xyz for xyz in zip(x, y, z)])
 line = Polygon(data)
 print(line.area)
+
+X, Y, Z = np.meshgrid(x, y, z)
+# breakpoint()
+box = line.minimum_rotated_rectangle
+# breakpoint()
 fig, ax = plt.subplots()
 ax.plot(data[:, 0], data[:, 1], ls="-", marker="o")
+# Plot the surface.
+# surf = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm,
+#                        linewidth=0, antialiased=False)
 fig.savefig("/tmp/test.png")
 
 # breakpoint()
