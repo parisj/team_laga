@@ -2,7 +2,8 @@ import json
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from shapely.geometry import Point, LineString, Polygon, MultiPolygon, shape
+from pyproj import Transformer
+from shapely.geometry import Polygon, MultiPolygon
 from shapely.validation import make_valid
 
 
@@ -20,10 +21,15 @@ def plot_multipoly(multipoly):
     no return
     
     """
-
+    #Scale points into map 
+    transformer = Transformer.from_crs('epsg:4326', 'epsg:3857')
+    
     fig, ax = plt.subplots()
     for poly in multipoly:
-        x,y=poly.exterior.xy
+        
+        #Scale and shif polygono points
+        tmp = poly.exterior.xy
+        x, y = transformer.transform(tmp[1], tmp[0])
         ax.plot(x, y)
     plt.show()
     
@@ -41,7 +47,10 @@ def plot_poly(poly):
     no return
     
     """
-    x,y=poly.exterior.xy
+    transformer = Transformer.from_crs('epsg:4326', 'epsg:3857')
+
+    tmp = poly.exterior.xy
+    x, y = transformer.transform(tmp[1], tmp[0])
     plt.plot(x, y)
     plt.show()
     
@@ -174,6 +183,8 @@ if __name__ == "__main__":
     path_data_30 = "code/data/tempo-30-zonen.csv"
     path_strassenplan = "code/data/gemeindestrassenplan.csv"
     path_begegnungszonen = "code/data/begegnungszonen.csv"
-    intersection = import_intersection(path_strassenplan, path_data_30, path_begegnungszonen)
-    print(intersection)
+    #intersection = import_intersection(path_strassenplan, path_data_30, path_begegnungszonen)
+    #print(intersection)
+    plot_multipoly(create_multipolygon(path_begegnungszonen))
+    
     
