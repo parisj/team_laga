@@ -1,3 +1,4 @@
+from pyproj import Transformer
 import json
 import numpy as np
 import pandas as pd
@@ -16,15 +17,11 @@ warnings.filterwarnings("ignore", category=ShapelyDeprecationWarning)
 
 plt.close("all")
 
-from pyproj import Transformer
 transformer = Transformer.from_crs('epsg:4326', 'epsg:3857')
 
 zonen_30 = pd.read_csv("data/tempo-30-zonen.csv", sep=";")
 begegnungszonen = pd.read_csv("data/begegnungszonen.csv", sep=";")
 gemeindestrassen = pd.read_csv("data/gemeindestrassenplan.csv", sep=";")
-
-# Average radius of earth [m] (±10km)
-r = 6371000
 
 widths_all = []
 # for i in range(0, gemeindestrassen.shape[0]):
@@ -33,21 +30,11 @@ for i in range(0, 6):
     js = json.loads(gemeindestrassen['Geo Shape'][i])
     tmp = np.array(js['coordinates'][0])
 
-    # Convert (lat,lon) to (x,y,z). (Formula could potentially be improved)
-    # x = r * np.sin(np.radians(tmp[:, 0])) * np.cos(np.radians(tmp[:, 1]))
-    # y = r * np.sin(np.radians(tmp[:, 0])) * np.sin(np.radians(tmp[:, 1]))
-    # z = r * np.cos(np.radians(tmp[:, 0]))
-    # data = np.array([xyz for xyz in zip(x, y, z)])
-
-    x, y = transformer.transform(tmp[:,1], tmp[:,0])
+    x, y = transformer.transform(tmp[:, 1], tmp[:, 0])
     data = np.array([xyz for xyz in zip(x, y)])
-    
+
     # Generic polygon shape of data (has interiors and exteriors)
     polygon = Polygon(data)
-
-    # fig, ax = plt.subplots()
-    # ax.plot(data[:, 0], data[:, 1], ls="-", marker="o")
-    # fig.savefig("/tmp/test.png")
 
     print(gemeindestrassen["strassenna"].loc[i])
     print(gemeindestrassen["strassenkl"].loc[i])
@@ -64,10 +51,11 @@ for i in range(0, 6):
         widths_all.append(width_lower_end)
         print(widths_all[-1])
         print(centerline.length/2)
+        breakpoint()
     except:
         print("Error 420")
-        
-breakpoint()
+
+# breakpoint()
 
 # # X, Y, Z = np.meshgrid(x, y, z)
 # # breakpoint()
