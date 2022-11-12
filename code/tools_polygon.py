@@ -120,7 +120,7 @@ def create_multipolygon(file, area=True):
     js_area_s = json.loads(df_area['Geo Shape'][0])
     area_np = np.array(js_area_s['coordinates'][0])
     poly_area = Polygon (area_np)
-    plot_poly(poly_area)
+    
     if not area:
         list_noarea=[]
     # iterate over all point groups in Geo Shape (from OSM)
@@ -195,7 +195,7 @@ def create_poly_with_indices(indices, file):
      indices: indices of Geo Shapes
 
     
-    file : path to csv file from OSM
+     file : path to csv file from OSM
     
     
     Returns
@@ -204,12 +204,17 @@ def create_poly_with_indices(indices, file):
     """
     
     list_poly=[]
+    
+    #import file
     df_import = pd.read_csv(file, sep=";")
+    
+    #add polygons based on indices to list
     for i in indices: 
         js_import = json.loads(df_import['Geo Shape'][i])
         np_import = np.array(js_import['coordinates'][0])
         poly_area = Polygon (np_import)
         list_poly.append(poly_area)
+    # Convert List to Multipolygon  
     poly_indices = MultiPolygon(list_poly)
     return poly_indices
 
