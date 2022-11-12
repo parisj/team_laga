@@ -45,14 +45,11 @@ print("transf. coord.", data[a])
 
 #polygon shape
 polygon = Polygon(data)
+
 #plot
 fig, ax = plt.subplots()
 ax.plot(polygon.exterior.xy[0], polygon.exterior.xy[1], ls="-", marker="o")
 fig.savefig("tmp/test0.png")
-
-
-
-
 
 # #segment polygon
 # polygon = polygon.segmentize(1)
