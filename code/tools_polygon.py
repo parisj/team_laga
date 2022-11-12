@@ -30,7 +30,7 @@ def plot_multipoly(multipoly):
 def plot_poly(poly):
     
     """
-    Polts a Polygon
+    Plots a Polygon
 
     Parameters
     ----------
