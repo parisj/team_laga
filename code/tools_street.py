@@ -25,6 +25,7 @@ warnings.filterwarnings("ignore", category=ShapelyDeprecationWarning)
 transformer = Transformer.from_crs('epsg:4326', 'epsg:3857')
 transform_back = Transformer.from_crs('epsg:3857', 'epsg:4326')
 
+
 def get_indices(start, end, length):
     indices = [start]
     completed = False
@@ -116,6 +117,7 @@ def import_width(data_street, index_street, width=7.6):
 
             # Generic polygon shape of data (has interiors and exteriors)
             polygon = Polygon(data)
+            polygon_gps = Polygon(tmp)
 
             # Centerline
             centerline = Centerline(polygon)
@@ -138,32 +140,30 @@ def import_width(data_street, index_street, width=7.6):
                 for i in df_street['Geo Point'][i].split(','):
                     current_coord.append(float(i))
 
-                G = ox.graph_from_point(current_coord, dist=100, network_type='all')
+                G = ox.graph_from_point(current_coord, dist=400, network_type='all')
                 fig, ax = ox.plot_graph(G, show=False)
-                ax.plot(polygon.exterior.xy[0], polygon.exterior.xy[1])
-
+                ax.plot(polygon_gps.exterior.xy[0], polygon_gps.exterior.xy[1])
                 plt.show()
 
-                breakpoint()
+                # breakpoint()
 
                 fig, ax = plt.subplots()
                 ax.plot(polygon.exterior.xy[0], polygon.exterior.xy[1])
                 for line in centerline:
-                    ax.plot(line.xy[0], line.xy[1], c='k')
-                for ent_patch in entsieglungs_patches:
-                    ax.plot(ent_patch.exterior.xy[0], ent_patch.exterior.xy[1], c='g')
+                    ax.plot(line.xy[0], line.xy[1], c='w')
+                # for ent_patch in entsieglungs_patches:
+                #     ax.plot(ent_patch.exterior.xy[0], ent_patch.exterior.xy[1], c='g')
                 plt.show()
 
     return list_index
 
 
 if __name__ == "__main__":
-    path_data_30 = "data/tempo-30-zonen.csv"
-    path_strassenplan = "data/gemeindestrassenplan.csv"
-    path_begegnungszonen = "data/begegnungszonen.csv"
+    path_data_30 = "../data/tempo-30-zonen.csv"
+    path_strassenplan = "../data/gemeindestrassenplan.csv"
+    path_begegnungszonen = "../data/begegnungszonen.csv"
     index_intersection = tp.import_intersection(path_strassenplan, path_data_30, path_begegnungszonen)
     index_width = import_width(path_strassenplan, index_intersection)
-    
     print(index_intersection)
     print(index_width)
     breakpoint()
