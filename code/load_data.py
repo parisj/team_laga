@@ -15,6 +15,25 @@ import warnings
 from shapely.errors import ShapelyDeprecationWarning
 warnings.filterwarnings("ignore", category=ShapelyDeprecationWarning)
 
+import shapely
+import shapely.geometry
+import shapely.ops
+from more_itertools import pairwise
+
+def segmentize_line(line, n):
+    step = line.length / n
+    starts = np.arange(0., line.length, step)
+    lines = [line.interpolate(start) for start in starts]
+    return shapely.geometry.LineString(lines)
+
+def segmentize(polygon, n=200):
+    ext_ring = polygon.exterior
+    lines = shapely.geometry.MultiLineString(list(pairwise(ext_ring.coords)))
+    dense_lines = [segmentize_line(line, n=int(n/len(lines))) for line in lines]
+    coords = [coord for line in dense_lines for coord in line.coords]
+    linear_ring = shapely.geometry.LinearRing(coords)
+    return shapely.geometry.Polygon(linear_ring)
+
 plt.close("all")
 
 transformer = Transformer.from_crs('epsg:4326', 'epsg:3857')
@@ -35,6 +54,8 @@ for i in range(0, 6):
 
     # Generic polygon shape of data (has interiors and exteriors)
     polygon = Polygon(data)
+    segmentize(polygon)
+    breakpoint()
 
     # print(gemeindestrassen["strassenna"].loc[i])
     # print(gemeindestrassen["strassenkl"].loc[i])
