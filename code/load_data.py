@@ -36,24 +36,25 @@ for i in range(0, 6):
     # Generic polygon shape of data (has interiors and exteriors)
     polygon = Polygon(data)
 
-    print(gemeindestrassen["strassenna"].loc[i])
-    print(gemeindestrassen["strassenkl"].loc[i])
-    print(gemeindestrassen["strassennr"].loc[i])
+    # print(gemeindestrassen["strassenna"].loc[i])
+    # print(gemeindestrassen["strassenkl"].loc[i])
+    # print(gemeindestrassen["strassennr"].loc[i])
 
-    try:
-        centerline = Centerline(polygon)
-        p = gpd.GeoDataFrame(centerline)
-        p = p.set_geometry(0)
+    centerline = Centerline(polygon)
+    p = gpd.GeoDataFrame(centerline)
+    p = p.set_geometry(0)
 
-        widths = p.distance(polygon.exterior)
-        width_lower_end = 2 * (widths.mean() - widths.std())
+    widths = p.distance(polygon.exterior)
+    width_lower_end = 2 * (widths.mean() - widths.std())
+    length = centerline.length / 2
 
-        widths_all.append(width_lower_end)
-        print(widths_all[-1])
-        print(centerline.length/2)
-        breakpoint()
-    except:
-        print("Error 420")
+    n_units = length / 40
+    A_entsieglung = n_units * 30 * 3.8
+
+    widths_all.append(width_lower_end)
+    print(width_lower_end)
+    print(length)
+    print(polygon.area - length * 3.8)
 
 # breakpoint()
 
