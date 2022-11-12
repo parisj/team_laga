@@ -20,8 +20,10 @@ import matplotlib
 import matplotlib.pyplot as plt
 
 matplotlib.use('GTK4Cairo')
+# ox.settings.default_crs = "epsg:3857"
 warnings.filterwarnings("ignore", category=ShapelyDeprecationWarning)
 transformer = Transformer.from_crs('epsg:4326', 'epsg:3857')
+transform_back = Transformer.from_crs('epsg:3857', 'epsg:4326')
 
 def get_indices(start, end, length):
     indices = [start]
@@ -132,6 +134,18 @@ def import_width(data_street, index_street, width=7.6):
                 A_potential += A_entsieglung
                 entsieglungs_patches = insert_entsieglung(n_units, polygon, centerline)
 
+                current_coord = []
+                for i in df_street['Geo Point'][i].split(','):
+                    current_coord.append(float(i))
+
+                G = ox.graph_from_point(current_coord, dist=100, network_type='all')
+                fig, ax = ox.plot_graph(G, show=False)
+                ax.plot(polygon.exterior.xy[0], polygon.exterior.xy[1])
+
+                plt.show()
+
+                breakpoint()
+
                 fig, ax = plt.subplots()
                 ax.plot(polygon.exterior.xy[0], polygon.exterior.xy[1])
                 for line in centerline:
@@ -144,11 +158,6 @@ def import_width(data_street, index_street, width=7.6):
 
 
 if __name__ == "__main__":
-    G = ox.graph_from_bbox(37.79, 37.78, -122.41, -122.43, network_type='drive')
-    G_projected = ox.project_graph(G)
-    ox.plot_graph(G_projected)
-
-    breakpoint()
     path_data_30 = "data/tempo-30-zonen.csv"
     path_strassenplan = "data/gemeindestrassenplan.csv"
     path_begegnungszonen = "data/begegnungszonen.csv"
