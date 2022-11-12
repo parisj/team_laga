@@ -39,6 +39,7 @@ def insert_entsieglung(n_units, polygon, centerline):
     points = np.array(polygon.exterior.coords)
     n = 0
     entsieglungs_patches = []
+    counter = 0
     while n <= n_units:
         random_index = np.random.randint(0, len(points) - 1)
         final_index = random_index + 1
@@ -56,18 +57,25 @@ def insert_entsieglung(n_units, polygon, centerline):
             centerline_point_end = np.array(nearest_points(point_end, centerline)[1])
             ps = [point_start, point_end, centerline_point_end, centerline_point_start]
             pol = Polygon(ps)
-            if len(entsieglungs_patches) > 0:
-                valid = True
-                print()
-                for patch in entsieglungs_patches:
-                    print(n, pol.distance(patch))
-                    if pol.distance(patch) < 5:
-                        valid = False
-                if valid:
-                    entsieglungs_patches.append(pol)
-                    n += 1
-            else:
-                entsieglungs_patches.append(pol)
+            entsieglungs_patches.append(pol)
+            n += 1
+            # if len(entsieglungs_patches) > 0:
+            #     valid = True
+            #     print()
+            #     for patch in entsieglungs_patches:
+            #         print(n, pol.distance(patch))
+            #         if pol.distance(patch) == 0:
+            #             valid = False
+            #     if valid:
+            #         entsieglungs_patches.append(pol)
+            #         n += 1
+            # else:
+            #     entsieglungs_patches.append(pol)
+        # counter += 1
+        # if counter > 10000:
+        #     entsieglungs_patches = []
+        #     n = 0
+        #     counter = 0
     return entsieglungs_patches
 
 
