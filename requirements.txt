@@ -1,1 +1,4 @@
-requirements
+matplotlib
+numpy
+python-pandas
+shapely
