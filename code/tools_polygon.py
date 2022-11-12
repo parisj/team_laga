@@ -48,7 +48,7 @@ def plot_poly(poly):
     transformer = Transformer.from_crs('epsg:4326', 'epsg:3857')
     tmp=poly.exterior.xy
     x, y=transformer.transform(tmp[1], tmp[0])
-    ax.plot(x, y)
+    plt.plot(x, y)
     plt.show()
     
     
@@ -182,5 +182,5 @@ if __name__ == "__main__":
     path_begegnungszonen = "code/data/begegnungszonen.csv"
     intersection = import_intersection(path_strassenplan, path_data_30, path_begegnungszonen)
     print(intersection)
-    plot_multipoly(create_multipolygon(path_strassenplan))
+    plot_multipoly(create_multipolygon(path_begegnungszonen))
     
