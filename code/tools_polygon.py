@@ -154,11 +154,11 @@ def import_intersection(data_street, *args):
     """
     import file path of streets 
     import file path of all areas wanted for intersection
-    return intex of all streets intersected by the area
+    return index of all streets intersected by the area
     
     Parameters
     ----------
-    data_streets : path to csv file from OSM
+    data_street : path to csv file from OSM
     
      *args: paths to csv files from OSM describing
             the Areas for intersection

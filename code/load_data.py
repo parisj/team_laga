@@ -1,0 +1,94 @@
+from pyproj import Transformer
+import json
+import numpy as np
+import pandas as pd
+
+import matplotlib.pyplot as plt
+from matplotlib import cm
+
+from shapely.geometry import Polygon
+
+from centerline.geometry import Centerline
+import geopandas as gpd
+
+import warnings
+from shapely.errors import ShapelyDeprecationWarning
+warnings.filterwarnings("ignore", category=ShapelyDeprecationWarning)
+
+import shapely
+import shapely.geometry
+import shapely.ops
+from more_itertools import pairwise
+
+def segmentize_line(line, n):
+    step = line.length / n
+    starts = np.arange(0., line.length, step)
+    lines = [line.interpolate(start) for start in starts]
+    return shapely.geometry.LineString(lines)
+
+def segmentize(polygon, n=200):
+    ext_ring = polygon.exterior
+    lines = shapely.geometry.MultiLineString(list(pairwise(ext_ring.coords)))
+    dense_lines = [segmentize_line(line, n=int(n/len(lines))) for line in lines]
+    coords = [coord for line in dense_lines for coord in line.coords]
+    linear_ring = shapely.geometry.LinearRing(coords)
+    return shapely.geometry.Polygon(linear_ring)
+
+plt.close("all")
+
+transformer = Transformer.from_crs('epsg:4326', 'epsg:3857')
+
+zonen_30 = pd.read_csv("data/tempo-30-zonen.csv", sep=";")
+begegnungszonen = pd.read_csv("data/begegnungszonen.csv", sep=";")
+gemeindestrassen = pd.read_csv("data/gemeindestrassenplan.csv", sep=";")
+
+widths_all = []
+# for i in range(0, gemeindestrassen.shape[0]):
+for i in range(0, 6):
+    # Load data
+    js = json.loads(gemeindestrassen['Geo Shape'][i])
+    tmp = np.array(js['coordinates'][0])
+
+    x, y = transformer.transform(tmp[:, 1], tmp[:, 0])
+    data = np.array([xyz for xyz in zip(x, y)])
+
+    # Generic polygon shape of data (has interiors and exteriors)
+    polygon = Polygon(data)
+    segmentize(polygon)
+    breakpoint()
+
+    # print(gemeindestrassen["strassenna"].loc[i])
+    # print(gemeindestrassen["strassenkl"].loc[i])
+    # print(gemeindestrassen["strassennr"].loc[i])
+
+    centerline = Centerline(polygon)
+    p = gpd.GeoDataFrame(centerline)
+    p = p.set_geometry(0)
+
+    widths = p.distance(polygon.exterior)
+    width_lower_end = 2 * (widths.mean() - widths.std())
+    length = centerline.length / 2
+
+    n_units = length / 40
+    A_entsieglung = n_units * 30 * 3.8
+
+    widths_all.append(width_lower_end)
+    print(width_lower_end)
+    print(length)
+    print(polygon.area - length * 3.8)
+
+# breakpoint()
+
+# # X, Y, Z = np.meshgrid(x, y, z)
+# # breakpoint()
+# box = line.minimum_rotated_rectangle
+# # breakpoint()
+# fig, ax = plt.subplots()
+# ax.plot(data[:, 0], data[:, 1], ls="-", marker="o")
+# ax.plot(data[-1, 0], data[-1, 1], ls="-", marker="o", color="r")
+# x,y = centerline.geoms.exterior.xy
+# ax.plot(x,y)
+# # Plot the surface.
+# # surf = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm,
+# #                        linewidth=0, antialiased=False)
+# fig.savefig("/tmp/test.png")
