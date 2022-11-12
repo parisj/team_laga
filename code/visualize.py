@@ -11,7 +11,7 @@ intersection = tp.import_intersection(path_strassenplan, path_begegnungszonen)
 
 G_i=tp.create_poly_with_indices(intersection, path_strassenplan)
 print(type(G_i))
-#G=gpd.GeoDataFrame(G_i)
+G=gpd.GeoDataFrame(G_i)
 
 
 # create network from that bounding box
