@@ -18,8 +18,8 @@ def plot_multipoly(multipoly):
 
     Returns
     -------
-    no return
-    
+    fig: Figure Matplotlib
+    ax: Axis Matplotlib
     """
     #Scale points into map 
     transformer = Transformer.from_crs('epsg:4326', 'epsg:3857')
@@ -31,7 +31,8 @@ def plot_multipoly(multipoly):
         tmp = poly.exterior.xy
         x, y = transformer.transform(tmp[1], tmp[0])
         ax.plot(x, y)
-    plt.show()
+        
+    return fig, ax
     
 def plot_poly(poly):
     
@@ -44,15 +45,17 @@ def plot_poly(poly):
 
     Returns
     -------
-    no return
+    fig: Figure Matplotlib
+    ax: Axis Matplotlib
     
     """
     transformer = Transformer.from_crs('epsg:4326', 'epsg:3857')
 
     tmp = poly.exterior.xy
     x, y = transformer.transform(tmp[1], tmp[0])
-    plt.plot(x, y)
-    plt.show()
+    fig, ax = plt.subplots()
+    ax.plot(x, y)
+    return fig, ax
     
     
 def create_index_intersection(file_path, multipoly):
@@ -227,6 +230,13 @@ if __name__ == "__main__":
     path_strassenplan = "data/gemeindestrassenplan.csv"
     path_begegnungszonen = "data/begegnungszonen.csv"
     intersection = import_intersection(path_strassenplan, path_data_30, path_begegnungszonen)
+<<<<<<< HEAD
     #print(intersection)
     plot_multipoly(create_multipolygon(path_strassenplan, area=False))
     plot_multipoly(create_poly_with_indices(intersection, path_strassenplan))
+=======
+    # print(intersection)
+    # plot_multipoly(create_multipolygon(path_strassenplan, area=False))
+    # plot_multipoly(create_poly_with_indices(intersection, path_strassenplan))
+    # plt.show()
+>>>>>>> origin/br1
