@@ -211,6 +211,7 @@ def create_poly_with_indices(indices, file):
     #add polygons based on indices to list
     for i in indices: 
         js_import = json.loads(df_import['Geo Shape'][i])
+        df_import.to_csv("code/test/data_geo_shape_test.csv")
         np_import = np.array(js_import['coordinates'][0])
         poly_area = Polygon (np_import)
         list_poly.append(poly_area)
