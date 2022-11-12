@@ -7,7 +7,9 @@ from shapely.ops import nearest_points
 from shapely.geometry import Point
 from shapely.geometry import Polygon
 from centerline.geometry import Centerline
+
 import geopandas as gpd
+import osmnx as ox
 
 import warnings
 from shapely.errors import ShapelyDeprecationWarning
@@ -141,12 +143,18 @@ def import_width(data_street, index_street, width=7.6):
     return list_index
 
 
-if __name__ == "__main__": 
+if __name__ == "__main__":
+    G = ox.graph_from_bbox(37.79, 37.78, -122.41, -122.43, network_type='drive')
+    G_projected = ox.project_graph(G)
+    ox.plot_graph(G_projected)
+
+    breakpoint()
     path_data_30 = "data/tempo-30-zonen.csv"
     path_strassenplan = "data/gemeindestrassenplan.csv"
     path_begegnungszonen = "data/begegnungszonen.csv"
     index_intersection = tp.import_intersection(path_strassenplan, path_data_30, path_begegnungszonen)
     index_width = import_width(path_strassenplan, index_intersection)
+    
     print(index_intersection)
     print(index_width)
     breakpoint()
