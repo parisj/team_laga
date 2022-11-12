@@ -14,9 +14,10 @@ import warnings
 from shapely.errors import ShapelyDeprecationWarning
 warnings.filterwarnings("ignore", category=ShapelyDeprecationWarning)
 
-from pyproj import Proj, transform
-P3857 = Proj(init='epsg:3857')
-P4326 = Proj(init='epsg:4326')
+plt.close("all")
+
+from pyproj import Transformer
+transformer = Transformer.from_crs('epsg:4326', 'epsg:3857')
 
 zonen_30 = pd.read_csv("data/tempo-30-zonen.csv", sep=";")
 begegnungszonen = pd.read_csv("data/begegnungszonen.csv", sep=";")
@@ -27,7 +28,7 @@ r = 6371000
 
 max_distance = []
 # for i in range(0, gemeindestrassen.shape[0]):
-for i in range(0, 1):
+for i in range(0, 6):
     # Load data
     js = json.loads(gemeindestrassen['Geo Shape'][i])
     tmp = np.array(js['coordinates'][0])
@@ -38,30 +39,32 @@ for i in range(0, 1):
     # z = r * np.cos(np.radians(tmp[:, 0]))
     # data = np.array([xyz for xyz in zip(x, y, z)])
 
-    x, y = transform(P4326, P3857, tmp[:,0], tmp[:,1])
+    x, y = transformer.transform(tmp[:,1], tmp[:,0])
     data = np.array([xyz for xyz in zip(x, y)])
     
     # Generic polygon shape of data (has interiors and exteriors)
     polygon = Polygon(data)
 
-    fig, ax = plt.subplots()
-    ax.plot(data[:, 0], data[:, 1], ls="-", marker="o")
-    fig.savefig("/tmp/test.png")
+    # fig, ax = plt.subplots()
+    # ax.plot(data[:, 0], data[:, 1], ls="-", marker="o")
+    # fig.savefig("/tmp/test.png")
 
-    # print(gemeindestrassen["strassenna"].loc[i])
-    # print(gemeindestrassen["strassenkl"].loc[i])
-    # print(gemeindestrassen["strassennr"].loc[i])
-    
+    print(gemeindestrassen["strassenna"].loc[i])
+    print(gemeindestrassen["strassenkl"].loc[i])
+    print(gemeindestrassen["strassennr"].loc[i])
+
     try:
         centerline = Centerline(polygon)
         p = gpd.GeoDataFrame(centerline)
         p = p.set_geometry(0)
 
-        max_distance.append(p.distance(Polygon.exterior).max())
+        max_distance.append(p.distance(polygon.exterior).max())
         print(max_distance[-1])
+        print(centerline.length/2)
+        breakpoint()
     except:
-        print(i)
-
+        print("Error 420")
+        
 breakpoint()
 
 # # X, Y, Z = np.meshgrid(x, y, z)
