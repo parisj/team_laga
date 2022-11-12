@@ -7,129 +7,164 @@ from shapely.validation import make_valid
 
 
 def plot_multipoly(multipoly):
-    #print(multipoly)
+    """
+    Polts a Multipolygon 
+
+    Parameters
+    ----------
+    multipoly : shapely.Multipolygon 
+           Multipolygon containing polygons
+
+    Returns
+    -------
+    no return
+    
+    """
+
     fig, ax = plt.subplots()
     for poly in multipoly:
-        #print(poly)
         x,y=poly.exterior.xy
         ax.plot(x, y)
-     
     plt.show()
     
 def plot_poly(poly):
+    
+    """
+    Polts a Polygon
+
+    Parameters
+    ----------
+    poly : shapely.polygon
+
+    Returns
+    -------
+    no return
+    
+    """
     x,y=poly.exterior.xy
     plt.plot(x, y)
     plt.show()
     
+    
 def create_index_intersection(file_path, multipoly):
+    
+    """
+    Creates an List with indexes of all polygons from file_path
+    intersecting with the given multipoly
+
+    Parameters
+    ----------
+    file_path : Path to cvs of Coordinates
+    multipoly : shapely.geometrie Multipolygon
+
+    Returns
+    -------
+    Indexes (in file_path) of streets intersected by multipoly
+    
+    """
+    
+    #Prepare Points
     df_area = pd.read_csv(str(file_path), sep=";")
     js_area_s = json.loads(df_area['Geo Shape'][0])
-    area_np = np.array(js_area_s['coordinates'][0])
+    # area_np = np.array(js_area_s['coordinates'][0])
     
-    #plot_poly(poly_area)
+    # Create empty list
     list_index=[]
     
+    # Enumerate and iterate over all Streets 
     for i, zone in enumerate(df_area['Geo Shape']):
         #print (zone, 'ZONE')
         js_points = json.loads(zone)
         points = np.array(js_points['coordinates'][0])
+        
+        # fix Dataset errors 
         if points.ndim == 3:
             points = points[0]
-        #print(points, 'points')
-        #print(points.shape, 'shape')
-        
-        #print(i)
+            
+        # Create Polygon from current Iteration of streets
         poly_area_new = Polygon(tuple(points))
         if multipoly.intersects(poly_area_new):
-            #print(multipoly.intersects(poly_area_new))
             list_index.append(i)
-        #   poly_area = poly_area.union(poly_area_new)
-        #print(list_index)
-        # poly_area = MultiPolygon(list_polygons)
 
     return list_index
+
+
 def create_multipolygon(file):
+    
+    """
+    Creates shapely.geometry Multipolygon
+
+    Parameters
+    ----------
+    file :  Path to csv file from OSM
+           
+
+    Returns
+    -------
+    poly_area: shapely.geometrie Multipolynom
+    
+    """
+    # create df from file path
     df_area = pd.read_csv(str(file), sep=";")
+    
+    # create first Polygon
     js_area_s = json.loads(df_area['Geo Shape'][0])
     area_np = np.array(js_area_s['coordinates'][0])
     poly_area = Polygon (area_np)
     
+    # iterate over all point groups in Geo Shape (from OSM)
     for i, zone in enumerate( df_area['Geo Shape']):
-        #print (zone, 'ZONE')
+        
+        #creat json of all coordinates in the zone
         js_points = json.loads(zone)
+        
         points = np.array(js_points['coordinates'][0])
+        
+        # fix dataset error
         if points.ndim == 3:
             points = points[0]
-        #print(points, 'points')
-        #print(points.shape, 'shape')
-        
-        #print(i)
+
+        # Creat Polygon with all point in the zone 
         poly_area_new = Polygon(tuple(points))
+        
+        # Add Polygon to the Multipolygon
         poly_area=poly_area.union(poly_area_new)
         
     return poly_area
 
 def import_intersection(data_street, *args):
+    
+    """
+    import file path of streets 
+    import file path of all areas wanted for intersection
+    return intex of all streets intersected by the area
+    
+    Parameters
+    ----------
+    data_streets : path to csv file from OSM
+    
+     *args: paths to csv files from OSM describing
+            the Areas for intersection
 
-   
-    df_street = pd.read_csv(str(data_street), sep=";")
-    js_street = json.loads(df_street['Geo Shape'][0])
-    street = np.array(js_street['coordinates'][0])
-  
+    Returns
+    -------
+    list of Indexes in data_street file ['Geo Shape']
     
-    # df_area = pd.read_csv(str(args[0]), sep=";")
-    # js_area_s = json.loads(df_area['Geo Shape'][0])
-    # area_np = np.array(js_area_s['coordinates'][0])
-    # poly_area = Polygon (area_np)
-    # i=0
-    # for zone in df_area['Geo Shape']:
-    #     #print (zone, 'ZONE')
-    #     js_points = json.loads(zone)
-    #     points = np.array(js_points['coordinates'][0])
-    #     if points.ndim == 3:
-    #         points = points[0]
-    #     print(points, 'points')
-    #     print(points.shape, 'shape')
-    #     i+=1
-    #     print(i)
-    #     poly_area_new = Polygon(tuple(points))
-    #     poly_area=poly_area.union(poly_area_new)
+    """
     
+    # Create first area from args[0]
     poly_area = create_multipolygon(args[0])
     for arg in args:
-        if arg != args[0]:
-            poly_area= poly_area.union(create_multipolygon(arg))
         
-    plot_multipoly(poly_area)
-    #fig, ax = plt.subplots()
-    #for poly in poly_area:
-    #    x,y=poly.exterior.xy
-
-    #    ax.plot(x, y)
-     
-    plt.show()
-    #fig, axes= plt.subplots(1,2)
-    #axes[0].plot(street[:,0],street[:,1])
-    #axes[1].plot(area[:,0],area[:,1])
-    # plt.show()
-
-    # for arg in args:
-    #     if (arg != args[0]):
-    #         df_next_area = pd.read_csv(str(arg), sep=";")
-    #         js_next_area = json.loads(df_next_area['Geo Shape'][0])
-    #         next_area = np.array(js_next_area['coordinates'][0])
-    #         area = np.append(area, next_area,axis=0)
-    #         #print(area)
-    # #print(area, 'appended')
-    # polygon_area = Polygon(area)
-    # print(polygon_area, 'AREA')
-    #poly_street = Polygon(street)
-    
+        # no dublicate
+        if arg != args[0]:
+            
+            # merge area from all args to first area
+            poly_area = poly_area.union(create_multipolygon(arg))
+        
+    # retrieve indexes from intersection of streets with all areas
     indexs_street = create_index_intersection(data_street, poly_area)
-    #print(indexs_street)
-    #intersection= make_valid(intersection_raw)
-    #print(intersection, 'intersection')
-    #plot_multipoly(intersection)
+
     
     return indexs_street
 
