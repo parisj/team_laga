@@ -7,10 +7,10 @@ from shapely.validation import make_valid
 
 
 def plot_multipoly(multipoly):
-    print(multipoly)
+    #print(multipoly)
     fig, ax = plt.subplots()
     for poly in multipoly:
-        print(poly)
+        #print(poly)
         x,y=poly.exterior.xy
         ax.plot(x, y)
      
@@ -21,45 +21,49 @@ def plot_poly(poly):
     plt.plot(x, y)
     plt.show()
     
-def create_multipolygon_intersection(file_path, multipoly):
+def create_index_intersection(file_path, multipoly):
     df_area = pd.read_csv(str(file_path), sep=";")
     js_area_s = json.loads(df_area['Geo Shape'][0])
     area_np = np.array(js_area_s['coordinates'][0])
-    poly_area = Polygon (area_np)
-    plot_poly(poly_area)
-    i=0
-    for zone in df_area['Geo Shape']:
+    
+    #plot_poly(poly_area)
+    list_index=[]
+    
+    for i, zone in enumerate(df_area['Geo Shape']):
         #print (zone, 'ZONE')
         js_points = json.loads(zone)
         points = np.array(js_points['coordinates'][0])
         if points.ndim == 3:
             points = points[0]
-        print(points, 'points')
-        print(points.shape, 'shape')
-        i+=1
-        print(i)
+        #print(points, 'points')
+        #print(points.shape, 'shape')
+        
+        #print(i)
         poly_area_new = Polygon(tuple(points))
         if multipoly.intersects(poly_area_new):
-            print(multipoly.intersects(poly_area_new))
-            poly_area=poly_area.union(poly_area_new)
-        
-    return poly_area
+            #print(multipoly.intersects(poly_area_new))
+            list_index.append(i)
+        #   poly_area = poly_area.union(poly_area_new)
+        #print(list_index)
+        # poly_area = MultiPolygon(list_polygons)
+
+    return list_index
 def create_multipolygon(file):
     df_area = pd.read_csv(str(file), sep=";")
     js_area_s = json.loads(df_area['Geo Shape'][0])
     area_np = np.array(js_area_s['coordinates'][0])
     poly_area = Polygon (area_np)
-    i=0
-    for zone in df_area['Geo Shape']:
+    
+    for i, zone in enumerate( df_area['Geo Shape']):
         #print (zone, 'ZONE')
         js_points = json.loads(zone)
         points = np.array(js_points['coordinates'][0])
         if points.ndim == 3:
             points = points[0]
-        print(points, 'points')
-        print(points.shape, 'shape')
-        i+=1
-        print(i)
+        #print(points, 'points')
+        #print(points.shape, 'shape')
+        
+        #print(i)
         poly_area_new = Polygon(tuple(points))
         poly_area=poly_area.union(poly_area_new)
         
@@ -121,13 +125,13 @@ def import_intersection(data_street, *args):
     # print(polygon_area, 'AREA')
     #poly_street = Polygon(street)
     
-    poly_street = create_multipolygon_intersection(data_street, poly_area)
-    intersection_raw = poly_area.intersection(poly_street)
-    intersection= make_valid(intersection_raw)
-    print(intersection, 'intersection')
-    plot_multipoly(intersection)
-  
-    return intersection
+    indexs_street = create_index_intersection(data_street, poly_area)
+    #print(indexs_street)
+    #intersection= make_valid(intersection_raw)
+    #print(intersection, 'intersection')
+    #plot_multipoly(intersection)
+    
+    return indexs_street
 
 
 
@@ -136,5 +140,5 @@ if __name__ == "__main__":
     path_strassenplan = "code/data/gemeindestrassenplan.csv"
     path_begegnungszonen = "code/data/begegnungszonen.csv"
     intersection = import_intersection(path_strassenplan, path_data_30, path_begegnungszonen)
-    
+    print(intersection)
     
