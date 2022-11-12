@@ -185,14 +185,42 @@ def import_intersection(data_street, *args):
     
     return indexs_street
 
+def create_poly_with_indices(indices, file):
+      
+    """
+    import file path of streets based on indices
+    and create Multipoly    
+    Parameters
+    ----------
+     indices: indices of Geo Shapes
+
+    
+    file : path to csv file from OSM
+    
+    
+    Returns
+    -------
+    poly_indices: shapely.geometrix Multipolynom
+    """
+    
+    list_poly=[]
+    df_import = pd.read_csv(file, sep=";")
+    for i in indices: 
+        js_import = json.loads(df_import['Geo Shape'][i])
+        np_import = np.array(js_import['coordinates'][0])
+        poly_area = Polygon (np_import)
+        list_poly.append(poly_area)
+    poly_indices = MultiPolygon(list_poly)
+    return poly_indices
+
+
 
 
 if __name__ == "__main__": 
     path_data_30 = "code/data/tempo-30-zonen.csv"
     path_strassenplan = "code/data/gemeindestrassenplan.csv"
     path_begegnungszonen = "code/data/begegnungszonen.csv"
-    #intersection = import_intersection(path_strassenplan, path_data_30, path_begegnungszonen)
+    intersection = import_intersection(path_strassenplan, path_data_30, path_begegnungszonen)
     #print(intersection)
     plot_multipoly(create_multipolygon(path_strassenplan, area=False))
-    
-    
+    plot_multipoly(create_poly_with_indices(intersection, path_strassenplan))
