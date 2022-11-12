@@ -27,9 +27,9 @@ polygon = Polygon(data)
 
 print(polygon.area)
 
-# p = gpd.GeoSeries(polygon)
-# p.plot()
-# plt.show()
+p = gpd.GeoSeries(polygon)
+p.plot()
+plt.show()
 
 from centerline.geometry import Centerline
 centerline = Centerline(polygon)

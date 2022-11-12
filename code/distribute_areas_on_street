@@ -1,0 +1,77 @@
+from pyproj import Transformer
+import json
+import numpy as np
+import pandas as pd
+import geopandas as gpd
+import shapely as shapely
+
+import matplotlib.pyplot as plt
+from matplotlib import cm
+from shapely.geometry import Polygon
+from centerline.geometry import Centerline
+
+import shapely.geometry
+import shapely.ops
+from more_itertools import pairwise
+
+import warnings
+from shapely.errors import ShapelyDeprecationWarning
+warnings.filterwarnings("ignore", category=ShapelyDeprecationWarning)
+
+plt.close("all")
+
+#transformer
+transformer = Transformer.from_crs('EPSG:4326', 'EPSG:3857', accuracy=0.5)
+
+#data
+zonen_30 = pd.read_csv("data/tempo-30-zonen.csv", sep=";")
+begegnungszonen = pd.read_csv("data/begegnungszonen.csv", sep=";")
+gemeindestrassen = pd.read_csv("data/gemeindestrassenplan.csv", sep=";")
+
+#which element
+a = 25
+
+#load data
+js = json.loads(gemeindestrassen['Geo Shape'][a])
+tmp = np.array(js['coordinates'][0])
+
+#transform data
+x, y = transformer.transform(tmp[:, 1], tmp[:, 0])
+data = np.array([xyz for xyz in zip(x, y)])
+
+#print coordinates
+print("dec. degrees", tmp[a])
+print("transf. coord.", data[a])
+
+#polygon shape
+polygon = Polygon(data)
+#plot
+fig, ax = plt.subplots()
+ax.plot(polygon.exterior.xy[0], polygon.exterior.xy[1], ls="-", marker="o")
+fig.savefig("tmp/test0.png")
+
+
+
+
+
+# #segment polygon
+# polygon = polygon.segmentize(1)
+# fig, ax = plt.subplots()
+# ax.plot(polygon.exterior.xy[0], polygon.exterior.xy[1], ls="-", marker="o")
+# fig.savefig("tmp/test1.png")
+
+# #select points
+# print(polygon.exterior.xy[0])
+# print(polygon.exterior.coords[120])
+# print(polygon.exterior.coords[121])
+
+#plot street
+# fig, ax = plt.subplots()
+# ax.plot(data[:, 0], data[:, 1], ls="-", marker="o")
+# fig.savefig("tmp/test.png")
+
+# #simplify polygon
+# polygon1 = polygon.simplify(10, preserve_topology=True)
+# fig, ax = plt.subplots()
+# ax.plot(polygon1.exterior.xy[0], polygon1.exterior.xy[1], ls="-", marker="o")
+# fig.savefig("tmp/test1.png")
