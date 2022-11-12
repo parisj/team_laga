@@ -24,5 +24,5 @@ if __name__ == "__main__":
     intersection = tp.import_intersection(path_strassenplan, path_data_30, path_begegnungszonen)
     multi_p = tp.create_multipolygon(path_strassenplan, area=False)
     fig, ax = plot_multipoly(multi_p, '#008f11')
-    fig.savefig("../plots/title_picture.pdf")
+    fig.savefig("../plots/title_picture.pdf", transparent=True)
     # plt.show()
