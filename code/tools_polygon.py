@@ -98,7 +98,7 @@ def create_index_intersection(file_path, multipoly):
     return list_index
 
 
-def create_multipolygon(file):
+def create_multipolygon(file, area=True):
     
     """
     Creates shapely.geometry Multipolygon
@@ -106,7 +106,7 @@ def create_multipolygon(file):
     Parameters
     ----------
     file :  Path to csv file from OSM
-           
+    area : Bool if area is wanted (unified) or seperate polygons
 
     Returns
     -------
@@ -120,7 +120,9 @@ def create_multipolygon(file):
     js_area_s = json.loads(df_area['Geo Shape'][0])
     area_np = np.array(js_area_s['coordinates'][0])
     poly_area = Polygon (area_np)
-    
+    plot_poly(poly_area)
+    if not area:
+        list_noarea=[]
     # iterate over all point groups in Geo Shape (from OSM)
     for i, zone in enumerate( df_area['Geo Shape']):
         
@@ -137,8 +139,14 @@ def create_multipolygon(file):
         poly_area_new = Polygon(tuple(points))
         
         # Add Polygon to the Multipolygon
-        poly_area=poly_area.union(poly_area_new)
+        if area:
+            poly_area=poly_area.union(poly_area_new)
         
+        else:
+            list_noarea.append(poly_area_new)
+        
+    if not area:
+        poly_area=MultiPolygon(list_noarea)
     return poly_area
 
 def import_intersection(data_street, *args):
@@ -185,6 +193,6 @@ if __name__ == "__main__":
     path_begegnungszonen = "code/data/begegnungszonen.csv"
     #intersection = import_intersection(path_strassenplan, path_data_30, path_begegnungszonen)
     #print(intersection)
-    plot_multipoly(create_multipolygon(path_begegnungszonen))
+    plot_multipoly(create_multipolygon(path_strassenplan, area=False))
     
     
