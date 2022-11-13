@@ -8,15 +8,15 @@
 3. Authors
 
 ## 1. Project Description
-This project focuses on evaluating the potential areas of rads and parkinglots which could be used as green areas or parking lots.
+This project focuses on evaluating the potential areas of rads and parkinglots which could be used as green areas.
 This would lead to an improved air quality, cooler temperatures in the summer and also increasing life quality.
-- Additional Information can be found in the [presentation](ODH_2022_OST_LAGA_PRES.pdf) where St. Gallen is analysed.
+- Additional Information can be found in the [presentation](ODH_2022_OST_LAGA_PRES.pdf) where St. Gallen is analysed as an example.
 
 ![](plots/streets_Plot.png "Plot potentential Streets")
 
 ## 2. Technologies used
-In this project we used the information of the Roads and the Zones form the kanton [St. Gallen](https://daten.sg.ch/) and displayed
-them using the osmnx library in Python. The project consists out of different tools to prepare the available dataset, calculate and plot 
+In this project we used the information of the roads and the zones from the kanton [St. Gallen](https://daten.sg.ch/) and displayed
+them using the osmnx library in Python. The project consists of different tools to prepare the available dataset, characterize streetdata, calculate and plot 
 different unsealing configuration. 
 
     
@@ -26,7 +26,7 @@ different unsealing configuration.
         
 -**tools_osmnx** (easier ploting and visualization)
         
--**tools_street** (Characterise streetdata and propose randomised unsealing solutions)
+-**tools_street** (Characterize streetdata and propose randomised unsealing solutions)
         
     
 ### Sources Datasets: 
@@ -35,8 +35,7 @@ different unsealing configuration.
 [tempo-30-zonen.csv](https://daten.sg.ch/explore/dataset/tempo-30-zonen%40stadt-stgallen/export/)
 
 ## 3. Install
-Clone repository 
-  
+
 ```
 git clone https://github.com/parisj/team_laga.git
 cd team_laga
