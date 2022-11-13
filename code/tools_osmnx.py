@@ -2,7 +2,6 @@ import tools_polygon as tp
 import osmnx as ox
 import matplotlib.pyplot as plt
 from descartes.patch import PolygonPatch
-from shapely.geometry import Polygon, MultiPolygon
 
 def ax_patch(ax, polygon, fc, ec, **kwargs):
     """

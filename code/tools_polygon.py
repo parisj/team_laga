@@ -4,7 +4,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from pyproj import Transformer
 from shapely.geometry import Polygon, MultiPolygon
-from shapely.validation import make_valid
 
 
 def plot_multipoly(multipoly):
@@ -231,9 +230,4 @@ if __name__ == "__main__":
     path_begegnungszonen = "code/data/begegnungszonen.csv"
     intersection = import_intersection(path_strassenplan, path_data_30, path_begegnungszonen)
     # print(intersection)
-    fig, ax = plot_multipoly(create_multipolygon(path_strassenplan, area=False))
-    plt.show()
-    fig.savefig('/plots/allstreets.pdf',transparent=True)
-    fig, ax= plot_multipoly(create_poly_with_indices(intersection, path_strassenplan))
-    plt.show()
     
