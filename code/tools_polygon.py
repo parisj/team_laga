@@ -235,3 +235,9 @@ if __name__ == "__main__":
     path_begegnungszonen = "data/begegnungszonen.csv"
     intersection = import_intersection(path_strassenplan, path_data_30, path_begegnungszonen)
     # print(intersection)
+<<<<<<< HEAD
+=======
+    # plot_multipoly(create_multipolygon(path_strassenplan, area=False))
+    # plot_multipoly(create_poly_with_indices(intersection, path_strassenplan))
+    # plt.show()
+>>>>>>> 5a958637dabee7894ada7882bd7eb56ec2bdb187
