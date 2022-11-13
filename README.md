@@ -10,6 +10,7 @@
 ## 1. Project Description
 This project focuses on evaluating the potential areas of rads and parkinglots which could be used as green areas or parking lots.
 This would lead to an improved air quality, cooler temperatures in the summer and also increasing life quality.
+- Additional Information can be found in the [presentation](ODH_2022_OST_LAGA_PRES.pdf)
 
 ![](plots/streets_Plot.png "Plot potentential Streets")
 
@@ -17,6 +18,7 @@ This would lead to an improved air quality, cooler temperatures in the summer an
 In this project we used the information of the Roads and the Zones form the kanton [St. Gallen](https://daten.sg.ch/) and displayed
 them using the osmnx library in Python. The project consists out of different tools to prepare the available dataset, calculate and plot 
 different unsealing configuration. 
+
     
 ### The main modules are:
     
