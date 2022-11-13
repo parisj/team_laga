@@ -4,10 +4,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from pyproj import Transformer
 from shapely.geometry import Polygon, MultiPolygon
-from shapely.validation import make_valid
 
 
 def plot_multipoly(multipoly):
+    
     """
     Polts a Multipolygon 
 
@@ -21,6 +21,7 @@ def plot_multipoly(multipoly):
     fig: Figure Matplotlib
     ax: Axis Matplotlib
     """
+    
     #Scale points into map 
     transformer = Transformer.from_crs('epsg:4326', 'epsg:3857')
     
@@ -49,6 +50,7 @@ def plot_poly(poly):
     ax: Axis Matplotlib
     
     """
+    
     transformer = Transformer.from_crs('epsg:4326', 'epsg:3857')
 
     tmp = poly.exterior.xy
@@ -116,6 +118,7 @@ def create_multipolygon(file, area=True):
     poly_area: shapely.geometrie Multipolynom
     
     """
+    
     # create df from file path
     df_area = pd.read_csv(str(file), sep=";")
     
@@ -204,6 +207,7 @@ def create_poly_with_indices(indices, file):
     Returns
     -------
     poly_indices: shapely.geometrix Multipolynom
+    
     """
     
     list_poly=[]
@@ -231,6 +235,3 @@ if __name__ == "__main__":
     path_begegnungszonen = "data/begegnungszonen.csv"
     intersection = import_intersection(path_strassenplan, path_data_30, path_begegnungszonen)
     # print(intersection)
-    # plot_multipoly(create_multipolygon(path_strassenplan, area=False))
-    # plot_multipoly(create_poly_with_indices(intersection, path_strassenplan))
-    # plt.show()
