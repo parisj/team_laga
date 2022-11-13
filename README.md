@@ -10,7 +10,7 @@
 ## 1. Project Description
 This project focuses on evaluating the potential areas of rads and parkinglots which could be used as green areas or parking lots.
 This would lead to an improved air quality, cooler temperatures in the summer and also increasing life quality.
-- Additional Information can be found in the [presentation](ODH_2022_OST_LAGA_PRES.pdf)
+- Additional Information can be found in the [presentation](ODH_2022_OST_LAGA_PRES.pdf) where St. Gallen is analysed.
 
 ![](plots/streets_Plot.png "Plot potentential Streets")
 
