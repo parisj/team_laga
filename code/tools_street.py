@@ -143,6 +143,7 @@ def import_width(data_street, index_street, width=7.6):
             if width_lower_end >= width:
                 list_index.append(i)
                 A_potential += A_entsieglung
+                
                 # entsieglungs_patches = find_unsealing_patches(np.array(polygon.exterior.coords), centerline, n_units)
 
                 # current_coord = []
