@@ -9,21 +9,21 @@
 
 
 ## 1. Project Description
-    This project focuses on evaluating the potential areas of rads and parkinglots which could be used as green areas or parking lots.
-    This would lead to an improved air quality, cooler temperatures in the summer and also increasing life quality.
+This project focuses on evaluating the potential areas of rads and parkinglots which could be used as green areas or parking lots.
+This would lead to an improved air quality, cooler temperatures in the summer and also increasing life quality.
 
 ## 2. Technologies used
-    In this project we used the information of the Roads and the Zones form the kanton [St. Gallen](https://daten.sg.ch/) and displayed
-    them using the osmnx library in Python. The project consists out of different tools to prepare the available dataset, calculate and plot 
-    different unsealing configuration. 
+In this project we used the information of the Roads and the Zones form the kanton [St. Gallen](https://daten.sg.ch/) and displayed
+them using the osmnx library in Python. The project consists out of different tools to prepare the available dataset, calculate and plot 
+different unsealing configuration. 
     
-    ### The main modules are:
+### The main modules are:
     
-    **tools_polygon** (Plot and create Polygons from Geodata, Intersect and Filter)
+**tools_polygon** (Plot and create Polygons from Geodata, Intersect and Filter)
         
-    **tools_osmnx** (easier ploting and visualization)
+**tools_osmnx** (easier ploting and visualization)
         
-    **tools_street** (Characterise streetdata and propose randomised unsealing solutions)
+**tools_street** (Characterise streetdata and propose randomised unsealing solutions)
         
     
 ### Sources Datasets: 
@@ -32,17 +32,19 @@
 [tempo-30-zonen.csv](https://daten.sg.ch/explore/dataset/tempo-30-zonen%40stadt-stgallen/export/)
 
 ## 3. Install
-    Clone repository 
-    
-    ```
-    git clone https://github.com/parisj/team_laga
-    cd team_laga
-    pip install -r requirements.txt
-    ```
+Clone repository 
+  
+```
+git clone https://github.com/parisj/team_laga
+cd team_laga
+pip install -r requirements.txt
+```
     
     
 ## 4.Authors
-    Anton Paris
-    Alexander Bruun
-    Pierluigi Margarito
-    Leart Sejdiu
+Anton Paris
+Alexander Bruun
+Pierluigi Margarito
+Leart Sejdiu
+    
+    
