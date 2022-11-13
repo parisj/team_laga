@@ -1,6 +1,5 @@
 ### team_laga
 
-<<<<<<< HEAD
 # Identifizierung Entsieglungspotenzial
 
 ## Table of Content
@@ -12,6 +11,7 @@
 This project focuses on evaluating the potential areas of rads and parkinglots which could be used as green areas or parking lots.
 This would lead to an improved air quality, cooler temperatures in the summer and also increasing life quality.
 
+![](plots/streets_Plot.png "Plot potentential Streets")
 
 ## 2. Technologies used
 In this project we used the information of the Roads and the Zones form the kanton [St. Gallen](https://daten.sg.ch/) and displayed
@@ -36,22 +36,16 @@ different unsealing configuration.
 Clone repository 
   
 ```
-git clone https://github.com/parisj/team_laga
+git clone https://github.com/parisj/team_laga.git
 cd team_laga
 pip install -r requirements.txt
 ```
     
     
 ## 4.Authors
--Anton Paris
--Alexander Bruun
--Pierluigi Margarito
--Leart Sejdiu
+  - Anton Paris
+  - Alexander Bruun
+  - Pierluigi Margarito
+  - Leart Sejdiu
     
     
-=======
-readme file 
-
-TODO:
-- Check ausreisser
->>>>>>> baba_lex
