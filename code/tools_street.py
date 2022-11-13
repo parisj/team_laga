@@ -176,6 +176,7 @@ def import_width(data_street, index_street, width=7.6):
                 # fig.savefig("../plots/entsieglungen_" + str(i) + ".pdf", transparent=True)
                 # # plt.show()
 
+    print(A_entsieglung)
     return list_index
 
 
