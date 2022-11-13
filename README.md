@@ -11,7 +11,7 @@
 This project focuses on evaluating the potential areas of rads and parkinglots which could be used as green areas or parking lots.
 This would lead to an improved air quality, cooler temperatures in the summer and also increasing life quality.
 
-![](plots/streets_Plot.pdf "Plot potentential Streets")
+![](plots/streets_Plot.png "Plot potentential Streets")
 
 ## 2. Technologies used
 In this project we used the information of the Roads and the Zones form the kanton [St. Gallen](https://daten.sg.ch/) and displayed
