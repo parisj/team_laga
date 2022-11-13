@@ -121,7 +121,7 @@ def import_width(data_street, index_street, width=7.6):
     for i in index_street:
         print(i)
         strassenkl = df_street["strassenkl"].loc[i]
-        if "W" not in strassenkl:
+        if "G" in strassenkl:
             js = json.loads(df_street['Geo Shape'][i])
             tmp = np.array(js['coordinates'][0])
 
