@@ -19,11 +19,11 @@ different unsealing configuration.
     
 ### The main modules are:
     
-**tools_polygon** (Plot and create Polygons from Geodata, Intersect and Filter)
+-**tools_polygon** (Plot and create Polygons from Geodata, Intersect and Filter)
         
-**tools_osmnx** (easier ploting and visualization)
+-**tools_osmnx** (easier ploting and visualization)
         
-**tools_street** (Characterise streetdata and propose randomised unsealing solutions)
+-**tools_street** (Characterise streetdata and propose randomised unsealing solutions)
         
     
 ### Sources Datasets: 
