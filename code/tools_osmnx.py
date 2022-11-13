@@ -50,7 +50,7 @@ def strd_osmnx_plot(Location, **kwargs):
     """
     
     G = ox.graph_from_place(Location, simplify=True, **kwargs)
-    fig, ax = ox.plot_graph(G, node_size=0, show=False, edge_linewidth=0.4,edge_color='#C0C0C0',edge_alpha=0.5)
+    fig, ax = ox.plot_graph(G, node_size=0, show=False, edge_linewidth=0.1, edge_color='#C0C0C0', edge_alpha=0.5)
     
     return fig, ax
 
@@ -85,11 +85,11 @@ if __name__ == "__main__":
     path_strassenplan = "code/data/gemeindestrassenplan.csv"
     path_begegnungszonen = "code/data/begegnungszonen.csv"
     
-    area = tp.create_multipolygon(path_begegnungszonen)
+    area = tp.create_multipolygon(path_data_30)
     #intersection = tp.import_intersection(path_strassenplan, path_data_30, path_begegnungszonen)
     
     fig, ax = strd_osmnx_plot("St. Gallen, Switzerland")
     ax_patch(ax, area, fc='#98FB98', ec='#98FB98', alpha=0.4)
-    fig.savefig('plots/begegnungszonen.pdf', transparent=True)
+    fig.savefig('plots/30_Zone_Plot.pdf', transparent=True)
     plt.show()
     
