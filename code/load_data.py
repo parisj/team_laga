@@ -15,6 +15,25 @@ import warnings
 from shapely.errors import ShapelyDeprecationWarning
 warnings.filterwarnings("ignore", category=ShapelyDeprecationWarning)
 
+import shapely
+import shapely.geometry
+import shapely.ops
+from more_itertools import pairwise
+
+def segmentize_line(line, n):
+    step = line.length / n
+    starts = np.arange(0., line.length, step)
+    lines = [line.interpolate(start) for start in starts]
+    return shapely.geometry.LineString(lines)
+
+def segmentize(polygon, n=200):
+    ext_ring = polygon.exterior
+    lines = shapely.geometry.MultiLineString(list(pairwise(ext_ring.coords)))
+    dense_lines = [segmentize_line(line, n=int(n/len(lines))) for line in lines]
+    coords = [coord for line in dense_lines for coord in line.coords]
+    linear_ring = shapely.geometry.LinearRing(coords)
+    return shapely.geometry.Polygon(linear_ring)
+
 plt.close("all")
 
 transformer = Transformer.from_crs('epsg:4326', 'epsg:3857')
@@ -35,25 +54,28 @@ for i in range(0, 6):
 
     # Generic polygon shape of data (has interiors and exteriors)
     polygon = Polygon(data)
+    segmentize(polygon)
+    breakpoint()
 
-    print(gemeindestrassen["strassenna"].loc[i])
-    print(gemeindestrassen["strassenkl"].loc[i])
-    print(gemeindestrassen["strassennr"].loc[i])
+    # print(gemeindestrassen["strassenna"].loc[i])
+    # print(gemeindestrassen["strassenkl"].loc[i])
+    # print(gemeindestrassen["strassennr"].loc[i])
 
-    try:
-        centerline = Centerline(polygon)
-        p = gpd.GeoDataFrame(centerline)
-        p = p.set_geometry(0)
+    centerline = Centerline(polygon)
+    p = gpd.GeoDataFrame(centerline)
+    p = p.set_geometry(0)
 
-        widths = p.distance(polygon.exterior)
-        width_lower_end = 2 * (widths.mean() - widths.std())
+    widths = p.distance(polygon.exterior)
+    width_lower_end = 2 * (widths.mean() - widths.std())
+    length = centerline.length / 2
 
-        widths_all.append(width_lower_end)
-        print(widths_all[-1])
-        print(centerline.length/2)
-        breakpoint()
-    except:
-        print("Error 420")
+    n_units = length / 40
+    A_entsieglung = n_units * 30 * 3.8
+
+    widths_all.append(width_lower_end)
+    print(width_lower_end)
+    print(length)
+    print(polygon.area - length * 3.8)
 
 # breakpoint()
 

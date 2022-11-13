@@ -1,9 +1,9 @@
 import json
 import numpy as np
 import pandas as pd
-from pyproj import Transformer
 import matplotlib.pyplot as plt
-from shapely.geometry import Polygon, MultiPolygon, shape
+from pyproj import Transformer
+from shapely.geometry import Polygon, MultiPolygon
 from shapely.validation import make_valid
 
 
@@ -18,17 +18,21 @@ def plot_multipoly(multipoly):
 
     Returns
     -------
-    no return
-    
+    fig: Figure Matplotlib
+    ax: Axis Matplotlib
     """
+    #Scale points into map 
     transformer = Transformer.from_crs('epsg:4326', 'epsg:3857')
+    
     fig, ax = plt.subplots()
     for poly in multipoly:
         
-        tmp=poly.exterior.xy
-        x, y=transformer.transform(tmp[1], tmp[0])
+        #Scale and shift polygono points
+        tmp = poly.exterior.xy
+        x, y = transformer.transform(tmp[1], tmp[0])
         ax.plot(x, y)
-    plt.show()
+        
+    return fig, ax
     
 def plot_poly(poly):
     
@@ -41,15 +45,17 @@ def plot_poly(poly):
 
     Returns
     -------
-    no return
+    fig: Figure Matplotlib
+    ax: Axis Matplotlib
     
     """
-    #
     transformer = Transformer.from_crs('epsg:4326', 'epsg:3857')
-    tmp=poly.exterior.xy
-    x, y=transformer.transform(tmp[1], tmp[0])
-    plt.plot(x, y)
-    plt.show()
+
+    tmp = poly.exterior.xy
+    x, y = transformer.transform(tmp[1], tmp[0])
+    fig, ax = plt.subplots()
+    ax.plot(x, y)
+    return fig, ax
     
     
 def create_index_intersection(file_path, multipoly):
@@ -65,7 +71,7 @@ def create_index_intersection(file_path, multipoly):
 
     Returns
     -------
-    Indexes: Indexes (in file_path) of streets intersected by multipoly
+    Indexes (in file_path) of streets intersected by multipoly
     
     """
     
@@ -95,7 +101,7 @@ def create_index_intersection(file_path, multipoly):
     return list_index
 
 
-def create_multipolygon(file):
+def create_multipolygon(file, area=True):
     
     """
     Creates shapely.geometry Multipolygon
@@ -103,7 +109,7 @@ def create_multipolygon(file):
     Parameters
     ----------
     file :  Path to csv file from OSM
-           
+    area : Bool if area is wanted (unified) or seperate polygons
 
     Returns
     -------
@@ -118,6 +124,8 @@ def create_multipolygon(file):
     area_np = np.array(js_area_s['coordinates'][0])
     poly_area = Polygon (area_np)
     
+    if not area:
+        list_noarea=[]
     # iterate over all point groups in Geo Shape (from OSM)
     for i, zone in enumerate( df_area['Geo Shape']):
         
@@ -134,8 +142,14 @@ def create_multipolygon(file):
         poly_area_new = Polygon(tuple(points))
         
         # Add Polygon to the Multipolygon
-        poly_area=poly_area.union(poly_area_new)
+        if area:
+            poly_area=poly_area.union(poly_area_new)
         
+        else:
+            list_noarea.append(poly_area_new)
+        
+    if not area:
+        poly_area=MultiPolygon(list_noarea)
     return poly_area
 
 def import_intersection(data_street, *args):
@@ -143,11 +157,11 @@ def import_intersection(data_street, *args):
     """
     import file path of streets 
     import file path of all areas wanted for intersection
-    return intex of all streets intersected by the area
+    return index of all streets intersected by the area
     
     Parameters
     ----------
-    data_streets : path to csv file from OSM
+    data_street : path to csv file from OSM
     
      *args: paths to csv files from OSM describing
             the Areas for intersection
@@ -174,13 +188,49 @@ def import_intersection(data_street, *args):
     
     return indexs_street
 
+def create_poly_with_indices(indices, file):
+      
+    """
+    import file path of streets based on indices
+    and create Multipoly    
+    Parameters
+    ----------
+     indices: indices of Geo Shapes
+
+    
+     file : path to csv file from OSM
+    
+    
+    Returns
+    -------
+    poly_indices: shapely.geometrix Multipolynom
+    """
+    
+    list_poly=[]
+    
+    #import file
+    df_import = pd.read_csv(file, sep=";")
+    
+    #add polygons based on indices to list
+    for i in indices: 
+        js_import = json.loads(df_import['Geo Shape'][i])
+        df_import.to_csv("code/test/data_geo_shape_test.csv")
+        np_import = np.array(js_import['coordinates'][0])
+        poly_area = Polygon (np_import)
+        list_poly.append(poly_area)
+    # Convert List to Multipolygon  
+    poly_indices = MultiPolygon(list_poly)
+    return poly_indices
+
+
 
 
 if __name__ == "__main__": 
-    path_data_30 = "code/data/tempo-30-zonen.csv"
-    path_strassenplan = "code/data/gemeindestrassenplan.csv"
-    path_begegnungszonen = "code/data/begegnungszonen.csv"
+    path_data_30 = "data/tempo-30-zonen.csv"
+    path_strassenplan = "data/gemeindestrassenplan.csv"
+    path_begegnungszonen = "data/begegnungszonen.csv"
     intersection = import_intersection(path_strassenplan, path_data_30, path_begegnungszonen)
-    print(intersection)
-    plot_multipoly(create_multipolygon(path_begegnungszonen))
-    
+    # print(intersection)
+    # plot_multipoly(create_multipolygon(path_strassenplan, area=False))
+    # plot_multipoly(create_poly_with_indices(intersection, path_strassenplan))
+    # plt.show()
