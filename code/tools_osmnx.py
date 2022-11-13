@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from descartes.patch import PolygonPatch
 
 def ax_patch(ax, polygon, fc, ec, **kwargs):
+    
     """
    Takes polygon or Multipolygon and existing axis, plots 
    polygons onto given axix
@@ -21,11 +22,15 @@ def ax_patch(ax, polygon, fc, ec, **kwargs):
     n no return 
     """
     
+    # Check if Multipolygon
     if polygon.geom_type == 'MultiPolygon':
+        
+        #add individual polygon to patch
         for poly in polygon:
             patch = PolygonPatch(poly, fc=fc, ec=ec, **kwargs)
             ax.add_patch(patch)
     else:
+        #add polygon to patch 
         patch = PolygonPatch(polygon, fc=fc, ec=ec, **kwargs)
         ax.add_patch(patch)
 
@@ -33,6 +38,7 @@ def ax_patch(ax, polygon, fc, ec, **kwargs):
 
 
 def strd_osmnx_plot(Location, **kwargs):
+    
     """
     import file path of streets based on indices
     and create Multipoly    
@@ -55,6 +61,7 @@ def strd_osmnx_plot(Location, **kwargs):
 
 
 def point_osmnx_plot(coordinate, distance, **kwargs):
+    
     """
     return fig, ax from a osmnx plot with at wanted coordinantes
     with a distance, more options for 
@@ -87,8 +94,9 @@ if __name__ == "__main__":
     area = tp.create_multipolygon(path_data_30)
     #intersection = tp.import_intersection(path_strassenplan, path_data_30, path_begegnungszonen)
     
-    fig, ax = strd_osmnx_plot("St. Gallen, Switzerland")
-    ax_patch(ax, area, fc='#98FB98', ec='#98FB98', alpha=0.4)
-    fig.savefig('plots/30_Zone_Plot.pdf', transparent=True)
-    plt.show()
+    # Plot 30 Zonen
+    # fig, ax = strd_osmnx_plot("St. Gallen, Switzerland")
+    # ax_patch(ax, area, fc='#98FB98', ec='#98FB98', alpha=0.4)
+    # fig.savefig('plots/30_Zone_Plot.pdf', transparent=True)
+    # plt.show()
     
