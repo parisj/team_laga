@@ -9,23 +9,22 @@
 4. Authors
 
 ## 1. Project Description
-This project focuses on evaluating the potential areas of rads and parkinglots which could be used as green areas.
-This would lead to an improved air quality, cooler temperatures in the summer and also increasing life quality.
-- Additional Information can be found in the [presentation](ODH_2022_OST_LAGA_PRES.pdf) where St. Gallen is analysed as an example.
+This project focuses on evaluating the potential areas of roads and parking lots which could be used as green areas.
+This would lead to an improved air quality, cooler temperatures in the summer and also increased life quality.
+- Additional information can be found in the [presentation](ODH_2022_OST_LAGA_PRES.pdf) where the city of St. Gallen is analysed as an example.
 
 ![](plots/streets_Plot.png "Plot potentential Streets")
 
 ## 2. Technologies used
-In this project we used the information of the roads and the zones from the kanton [St. Gallen](https://daten.sg.ch/) and displayed
-them using the osmnx library in Python. The project consists of different tools to prepare the available dataset, characterize streetdata, calculate and plot 
-different unsealing configuration. 
+In this project we used the information of the roads and the zones from the Kanton [St. Gallen](https://daten.sg.ch/) and displayed
+them using the matplotlib- and osmnx library in Python. The project consists of different tools to prepare the available dataset, characterize streetdata, calculate and plot different unsealing configuration. 
 
     
 ### The main modules are:
     
 -**tools_polygon** (Plot and create Polygons from Geodata, Intersect and Filter)
         
--**tools_osmnx** (easier ploting and visualization)
+-**tools_osmnx** (easier plotting and visualization)
         
 -**tools_street** (Characterize streetdata and propose randomised unsealing solutions)
         
