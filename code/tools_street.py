@@ -23,10 +23,8 @@ import tools_polygon as tp
 import tools_osmnx as to
 
 matplotlib.use('GTK4Cairo')
-# ox.settings.default_crs = "epsg:3857"
 warnings.filterwarnings("ignore", category=ShapelyDeprecationWarning)
 transformer = Transformer.from_crs('epsg:4326', 'epsg:3857')
-transformer_back = Transformer.from_crs('epsg:3857', 'epsg:4326')
 
 
 def get_indices(start, end, length):
@@ -176,6 +174,7 @@ def import_width(data_street, index_street, width=7.6):
                 # fig.savefig("../plots/entsieglungen_" + str(i) + ".pdf", transparent=True)
                 # # plt.show()
 
+    print(A_entsieglung)
     return list_index
 
 
