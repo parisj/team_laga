@@ -5,8 +5,6 @@ import matplotlib
 import matplotlib.pyplot as plt
 from descartes.patch import PolygonPatch
 
-matplotlib.use('GTK4Cairo')
-
 
 def ax_patch(ax, polygon, fc, ec, **kwargs):
     """
