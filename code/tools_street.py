@@ -162,11 +162,11 @@ def import_width(data_street, index_street, width=7.6):
                 # breakpoint()
 
                 fig, ax = plt.subplots()
-                ax.plot(polygon.exterior.xy[0], polygon.exterior.xy[1], c='k')
+                ax.plot(polygon.exterior.xy[0], polygon.exterior.xy[1], c='k', lw=0.1)
                 # for line in centerline:
                 #     ax.plot(line.xy[0], line.xy[1], c='k')
                 for ent_patch in entsieglungs_patches:
-                    ax.plot(ent_patch.exterior.xy[0], ent_patch.exterior.xy[1], c='g')
+                    ax.plot(ent_patch.exterior.xy[0], ent_patch.exterior.xy[1], c='g', lw=0.1)
                     # patch = PolygonPatch(ent_patch, fc="g", ec="g")
                     # ax.add_patch(patch)
                 ax.axis('off')
