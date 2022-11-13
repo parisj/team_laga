@@ -5,7 +5,8 @@
 ## Table of Content
 1. Project Description
 2. Technologies used
-3. Authors
+3. Installation
+4. Authors
 
 ## 1. Project Description
 This project focuses on evaluating the potential areas of rads and parkinglots which could be used as green areas.
@@ -34,7 +35,7 @@ different unsealing configuration.
 [gemeindestrassenplan.csv](https://daten.sg.ch/explore/dataset/gemeindestrassenplan%40stadt-stgallen/export/?disjunctive.strassenkl&disjunctive.strassenna&disjunctive.strassennr), 
 [tempo-30-zonen.csv](https://daten.sg.ch/explore/dataset/tempo-30-zonen%40stadt-stgallen/export/)
 
-## 3. Install
+## 3. Installation
 
 ```
 git clone https://github.com/parisj/team_laga.git
