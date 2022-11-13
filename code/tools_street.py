@@ -65,9 +65,10 @@ def insert_entsieglung(n_units, polygon, centerline):
             centerline_point_end = np.array(nearest_points(point_end, centerline)[1])
             ps = [point_start, point_end, centerline_point_end, centerline_point_start]
             pol = Polygon(ps)
-            # x, y = transformer_back.transform(pol.exterior.xy[1], pol.exterior.xy[0])
-            # entsieglungs_patches.append(Polygon(np.array([x, y]).T))
-            entsieglungs_patches.append(pol)
+            x, y = transformer_back.transform(pol.exterior.xy[0], pol.exterior.xy[1])
+            entsieglungs_patches.append(Polygon(np.array([x, y]).T))
+            print(entsieglungs_patches[-1].exterior.coords[:])
+            # entsieglungs_patches.append(pol)
             # breakpoint()
             n += 1
             # if len(entsieglungs_patches) > 0:
@@ -146,9 +147,9 @@ def import_width(data_street, index_street, width=7.6):
                 # for ind in df_street['Geo Point'][i].split(','):
                 #     current_coord.append(float(ind))
 
-                # G = ox.graph_from_point(current_coord, dist=400, network_type='all')
-                # fig, ax = ox.plot_graph(G, show=False)
-                # fig, ax = to.point_osmnx_plot(current_coord, 400)
+                # # G = ox.graph_from_point(current_coord, dist=400, network_type='all')
+                # # fig, ax = ox.plot_graph(G, show=False)
+                # fig, ax = to.point_osmnx_plot(current_coord, 600)
                 # # ax.plot(polygon_gps.exterior.xy[0], polygon_gps.exterior.xy[1])
                 # ax.plot(entsieglungs_patches[0].exterior.xy[0], entsieglungs_patches[0].exterior.xy[1])
                 # # ax = to.ax_patch(ax, entsieglungs_patches[0])
