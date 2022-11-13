@@ -1,7 +1,11 @@
 import tools_polygon as tp
+import tools_street as ts
 import osmnx as ox
+import matplotlib
 import matplotlib.pyplot as plt
 from descartes.patch import PolygonPatch
+
+matplotlib.use('GTK4Cairo')
 
 
 def ax_patch(ax, polygon, fc, ec, **kwargs):
@@ -74,19 +78,20 @@ def point_osmnx_plot(coordinate, distance, **kwargs):
     return fig, ax
 
 if __name__ == "__main__": 
-    
     #fig, ax = point_osmnx_plot((9.5,48.91),400)
     #plt.show()
     
-    path_data_30 = "code/data/tempo-30-zonen.csv"
-    path_strassenplan = "code/data/gemeindestrassenplan.csv"
-    path_begegnungszonen = "code/data/begegnungszonen.csv"
-    
-    area = tp.create_multipolygon(path_data_30)
-    #intersection = tp.import_intersection(path_strassenplan, path_data_30, path_begegnungszonen)
+    path_data_30 = "../data/tempo-30-zonen.csv"
+    path_strassenplan = "../data/gemeindestrassenplan.csv"
+    path_begegnungszonen = "../data/begegnungszonen.csv"
+
+    # area = tp.create_multipolygon(path_data_30)
+    intersection = tp.import_intersection(path_strassenplan, path_data_30, path_begegnungszonen)
+    index_width = ts.import_width(path_strassenplan, intersection)
+    streets = tp.create_poly_with_indices(index_width, path_strassenplan)
     
     # Plot 30 Zonen
-    # fig, ax = strd_osmnx_plot("St. Gallen, Switzerland")
-    # ax_patch(ax, area, fc='#98FB98', ec='#98FB98', alpha=0.4)
-    # fig.savefig('plots/30_Zone_Plot.pdf', transparent=True)
-    # plt.show()
+    fig, ax = strd_osmnx_plot("St. Gallen, Switzerland")
+    ax_patch(ax, streets, fc='#98FB98', ec='#98FB98', alpha=0.4)
+    fig.savefig('../plots/streets_Plot.pdf', transparent=True)
+    plt.show()

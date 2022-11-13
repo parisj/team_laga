@@ -218,7 +218,6 @@ def create_poly_with_indices(indices, file):
     #add polygons based on indices to list
     for i in indices: 
         js_import = json.loads(df_import['Geo Shape'][i])
-        df_import.to_csv("code/test/data_geo_shape_test.csv")
         np_import = np.array(js_import['coordinates'][0])
         poly_area = Polygon (np_import)
         list_poly.append(poly_area)
@@ -227,17 +226,9 @@ def create_poly_with_indices(indices, file):
     return poly_indices
 
 
-
-
 if __name__ == "__main__": 
     path_data_30 = "data/tempo-30-zonen.csv"
     path_strassenplan = "data/gemeindestrassenplan.csv"
     path_begegnungszonen = "data/begegnungszonen.csv"
     intersection = import_intersection(path_strassenplan, path_data_30, path_begegnungszonen)
     # print(intersection)
-<<<<<<< HEAD
-=======
-    # plot_multipoly(create_multipolygon(path_strassenplan, area=False))
-    # plot_multipoly(create_poly_with_indices(intersection, path_strassenplan))
-    # plt.show()
->>>>>>> 5a958637dabee7894ada7882bd7eb56ec2bdb187
