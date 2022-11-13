@@ -31,8 +31,6 @@ def ax_patch(ax, polygon, fc="b", ec="b"):
         patch = PolygonPatch(polygon, fc=fc, ec=ec)
         ax.add_patch(patch)
 
-    return ax
-
 
 def strd_osmnx_plot(town,city, **kwargs):
     """

@@ -30,6 +30,21 @@ transformer_back = Transformer.from_crs('epsg:3857', 'epsg:4326')
 
 
 def get_indices(start, end, length):
+    """
+    import start and end index of points
+    import length of points array
+    return list of indices between start and end
+
+    Parameters
+    ----------
+    start : start index
+    end : end index
+    length : length of array
+
+    Returns
+    -------
+    list of indices from start to end
+    """
     indices = [start]
     completed = False
     it = start
@@ -43,52 +58,44 @@ def get_indices(start, end, length):
     return indices
 
 
-def insert_entsieglung(n_units, polygon, centerline):
-    points = np.array(polygon.exterior.coords)
+def find_unsealing_patches(points, centerline, n_units=1, distance=30, d_thr=35):
+    """
+    import point and centerline geometries
+    import desired number of patches
+    import geometric constraints for patches
+    return list of patches
+
+    Parameters
+    ----------
+    points : list of points
+    centerline : centerline shape
+    n_units : number of patches
+    distance : size of patches
+    d_thr : distance threshold
+
+    Returns
+    -------
+    list of patches
+    """
     n = 0
-    entsieglungs_patches = []
-    counter = 0
+    patch_list = []
     while n <= n_units:
-        random_index = np.random.randint(0, len(points) - 1)
-        final_index = random_index + 1
+        rand_i = np.random.randint(0, len(points) - 1)
+        final_i = rand_i + 1
         distance = 0
-        while distance < 30:
-            distance += np.linalg.norm(points[final_index] - points[final_index - 1])
-            final_index += 1
-            if final_index == len(points):
-                final_index = 0
-        # TODO: Improve this
-        if distance < 35:
-            point_start = Point(points[random_index])
-            point_end = Point(points[final_index])
-            centerline_point_start = np.array(nearest_points(point_start, centerline)[1])
-            centerline_point_end = np.array(nearest_points(point_end, centerline)[1])
-            ps = [point_start, point_end, centerline_point_end, centerline_point_start]
-            pol = Polygon(ps)
-            # x, y = transformer_back.transform(pol.exterior.xy[0], pol.exterior.xy[1])
-            # entsieglungs_patches.append(Polygon(np.array([x, y]).T))
-            # print(entsieglungs_patches[-1].exterior.coords[:])
-            entsieglungs_patches.append(pol)
-            # breakpoint()
+        while d < distance:
+            d += np.linalg.norm(points[final_i] - points[final_i - 1])
+            final_i += 1
+            if final_i == len(points):
+                final_i = 0
+        if d < d_thr:
+            p1 = Point(points[rand_i])
+            p2 = Point(points[final_i])
+            p3 = np.array(nearest_points(p1, centerline)[1])
+            p4 = np.array(nearest_points(p2, centerline)[1])
+            patch_list.append(Polygon([p1, p2, p4, p3]))
             n += 1
-            # if len(entsieglungs_patches) > 0:
-            #     valid = True
-            #     print()
-            #     for patch in entsieglungs_patches:
-            #         print(n, pol.distance(patch))
-            #         if pol.distance(patch) == 0:
-            #             valid = False
-            #     if valid:
-            #         entsieglungs_patches.append(pol)
-            #         n += 1
-            # else:
-            #     entsieglungs_patches.append(pol)
-        # counter += 1
-        # if counter > 10000:
-        #     entsieglungs_patches = []
-        #     n = 0
-        #     counter = 0
-    return entsieglungs_patches
+    return patch_list
 
 
 def import_width(data_street, index_street, width=7.6):
@@ -111,21 +118,15 @@ def import_width(data_street, index_street, width=7.6):
     A_potential = 0
     df_street = pd.read_csv(data_street, sep=";")
 
-    # for i in index_street:
-    for i in [25]:
+    for i in index_street:
         strassenkl = df_street["strassenkl"].loc[i]
         if "W" not in strassenkl:
-            print(i, "/", len(index_street))
-            # Load data
             js = json.loads(df_street['Geo Shape'][i])
             tmp = np.array(js['coordinates'][0])
 
             x, y = transformer.transform(tmp[:, 1], tmp[:, 0])
             data = np.array([xyz for xyz in zip(x, y)])
-
-            # Generic polygon shape of data (has interiors and exteriors)
             polygon = Polygon(data)
-            polygon_gps = Polygon(tmp)
 
             # Centerline
             centerline = Centerline(polygon)
@@ -142,7 +143,7 @@ def import_width(data_street, index_street, width=7.6):
             if width_lower_end >= width:
                 list_index.append(i)
                 A_potential += A_entsieglung
-                entsieglungs_patches = insert_entsieglung(n_units, polygon, centerline)
+                # entsieglungs_patches = find_unsealing_patches(np.array(polygon.exterior.coords), centerline, n_units)
 
                 # current_coord = []
                 # for ind in df_street['Geo Point'][i].split(','):
@@ -152,8 +153,8 @@ def import_width(data_street, index_street, width=7.6):
                 # # fig, ax = ox.plot_graph(G, show=False)
                 # fig, ax = to.point_osmnx_plot(current_coord, 600)
                 # # ax.plot(polygon_gps.exterior.xy[0], polygon_gps.exterior.xy[1])
-                # ax.plot(entsieglungs_patches[0].exterior.xy[0], entsieglungs_patches[0].exterior.xy[1])
-                # # ax = to.ax_patch(ax, entsieglungs_patches[0])
+                # # ax.plot(entsieglungs_patches[0].exterior.xy[0], entsieglungs_patches[0].exterior.xy[1], c="r")
+                # to.ax_patch(ax, entsieglungs_patches[0])
                 # # patch = PolygonPatch(entsieglungs_patches[0], fc="b", ec="b")
                 # # ax.add_patch(patch)
 
@@ -161,18 +162,18 @@ def import_width(data_street, index_street, width=7.6):
 
                 # breakpoint()
 
-                fig, ax = plt.subplots()
-                ax.plot(polygon.exterior.xy[0], polygon.exterior.xy[1], c='k', lw=0.1)
-                # for line in centerline:
-                #     ax.plot(line.xy[0], line.xy[1], c='k')
-                for ent_patch in entsieglungs_patches:
-                    ax.plot(ent_patch.exterior.xy[0], ent_patch.exterior.xy[1], c='g', lw=0.1)
-                    # patch = PolygonPatch(ent_patch, fc="g", ec="g")
-                    # ax.add_patch(patch)
-                ax.axis('off')
-                # fig.savefig("../plots/centerline_" + str(i) + ".pdf", transparent=True)
-                fig.savefig("../plots/entsieglungen_" + str(i) + ".pdf", transparent=True)
-                # plt.show()
+                # fig, ax = plt.subplots()
+                # ax.plot(polygon.exterior.xy[0], polygon.exterior.xy[1], c='k', lw=0.1)
+                # # for line in centerline:
+                # #     ax.plot(line.xy[0], line.xy[1], c='k')
+                # for ent_patch in entsieglungs_patches:
+                #     ax.plot(ent_patch.exterior.xy[0], ent_patch.exterior.xy[1], c='g', lw=0.1)
+                #     # patch = PolygonPatch(ent_patch, fc="g", ec="g")
+                #     # ax.add_patch(patch)
+                # ax.axis('off')
+                # # fig.savefig("../plots/centerline_" + str(i) + ".pdf", transparent=True)
+                # fig.savefig("../plots/entsieglungen_" + str(i) + ".pdf", transparent=True)
+                # # plt.show()
 
     return list_index
 
