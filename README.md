@@ -33,11 +33,13 @@
 
 ## 3. Install
     Clone repository 
+    
     ```
     git clone https://github.com/parisj/team_laga
     cd team_laga
     pip install -r requirements.txt
     ```
+    
     
 ## 4.Authors
     Anton Paris
