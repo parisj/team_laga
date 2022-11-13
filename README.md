@@ -1,5 +1,6 @@
 ### team_laga
 
+<<<<<<< HEAD
 # Identifizierung Entsieglungspotenzial
 
 ## Table of Content
@@ -48,3 +49,9 @@ pip install -r requirements.txt
 -Leart Sejdiu
     
     
+=======
+readme file 
+
+TODO:
+- Check ausreisser
+>>>>>>> baba_lex
