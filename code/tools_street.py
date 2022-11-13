@@ -1,4 +1,3 @@
-import tools_polygon as tp
 import json
 import numpy as np
 import pandas as pd
@@ -7,6 +6,7 @@ from shapely.ops import nearest_points
 from shapely.geometry import Point
 from shapely.geometry import Polygon
 from centerline.geometry import Centerline
+from descartes.patch import PolygonPatch
 
 import geopandas as gpd
 import osmnx as ox
@@ -19,11 +19,14 @@ from pyproj import Transformer
 import matplotlib
 import matplotlib.pyplot as plt
 
+import tools_polygon as tp
+import tools_osmnx as to
+
 matplotlib.use('GTK4Cairo')
 # ox.settings.default_crs = "epsg:3857"
 warnings.filterwarnings("ignore", category=ShapelyDeprecationWarning)
 transformer = Transformer.from_crs('epsg:4326', 'epsg:3857')
-transform_back = Transformer.from_crs('epsg:3857', 'epsg:4326')
+transformer_back = Transformer.from_crs('epsg:3857', 'epsg:4326')
 
 
 def get_indices(start, end, length):
@@ -53,7 +56,7 @@ def insert_entsieglung(n_units, polygon, centerline):
             distance += np.linalg.norm(points[final_index] - points[final_index - 1])
             final_index += 1
             if final_index == len(points):
-                final_index = 0 
+                final_index = 0
         # TODO: Improve this
         if distance < 35:
             point_start = Point(points[random_index])
@@ -62,7 +65,10 @@ def insert_entsieglung(n_units, polygon, centerline):
             centerline_point_end = np.array(nearest_points(point_end, centerline)[1])
             ps = [point_start, point_end, centerline_point_end, centerline_point_start]
             pol = Polygon(ps)
+            # x, y = transformer_back.transform(pol.exterior.xy[1], pol.exterior.xy[0])
+            # entsieglungs_patches.append(Polygon(np.array([x, y]).T))
             entsieglungs_patches.append(pol)
+            # breakpoint()
             n += 1
             # if len(entsieglungs_patches) > 0:
             #     valid = True
@@ -136,24 +142,34 @@ def import_width(data_street, index_street, width=7.6):
                 A_potential += A_entsieglung
                 entsieglungs_patches = insert_entsieglung(n_units, polygon, centerline)
 
-                current_coord = []
-                for i in df_street['Geo Point'][i].split(','):
-                    current_coord.append(float(i))
+                # current_coord = []
+                # for ind in df_street['Geo Point'][i].split(','):
+                #     current_coord.append(float(ind))
 
-                G = ox.graph_from_point(current_coord, dist=400, network_type='all')
-                fig, ax = ox.plot_graph(G, show=False)
-                ax.plot(polygon_gps.exterior.xy[0], polygon_gps.exterior.xy[1])
-                plt.show()
+                # G = ox.graph_from_point(current_coord, dist=400, network_type='all')
+                # fig, ax = ox.plot_graph(G, show=False)
+                # fig, ax = to.point_osmnx_plot(current_coord, 400)
+                # # ax.plot(polygon_gps.exterior.xy[0], polygon_gps.exterior.xy[1])
+                # ax.plot(entsieglungs_patches[0].exterior.xy[0], entsieglungs_patches[0].exterior.xy[1])
+                # # ax = to.ax_patch(ax, entsieglungs_patches[0])
+                # # patch = PolygonPatch(entsieglungs_patches[0], fc="b", ec="b")
+                # # ax.add_patch(patch)
+
+                # plt.show()
 
                 # breakpoint()
 
                 fig, ax = plt.subplots()
-                ax.plot(polygon.exterior.xy[0], polygon.exterior.xy[1])
-                for line in centerline:
-                    ax.plot(line.xy[0], line.xy[1], c='w')
-                # for ent_patch in entsieglungs_patches:
-                #     ax.plot(ent_patch.exterior.xy[0], ent_patch.exterior.xy[1], c='g')
-                plt.show()
+                ax.plot(polygon.exterior.xy[0], polygon.exterior.xy[1], c='k')
+                # for line in centerline:
+                #     ax.plot(line.xy[0], line.xy[1], c='w')
+                for ent_patch in entsieglungs_patches:
+                    ax.plot(ent_patch.exterior.xy[0], ent_patch.exterior.xy[1], c='g')
+                    # patch = PolygonPatch(ent_patch, fc="g", ec="g")
+                    # ax.add_patch(patch)
+                ax.axis('off')
+                fig.savefig("../plots/entsieglungen_" + str(i) + ".pdf", transparent=True)
+                # plt.show()
 
     return list_index
 
