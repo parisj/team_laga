@@ -65,10 +65,10 @@ def insert_entsieglung(n_units, polygon, centerline):
             centerline_point_end = np.array(nearest_points(point_end, centerline)[1])
             ps = [point_start, point_end, centerline_point_end, centerline_point_start]
             pol = Polygon(ps)
-            x, y = transformer_back.transform(pol.exterior.xy[0], pol.exterior.xy[1])
-            entsieglungs_patches.append(Polygon(np.array([x, y]).T))
-            print(entsieglungs_patches[-1].exterior.coords[:])
-            # entsieglungs_patches.append(pol)
+            # x, y = transformer_back.transform(pol.exterior.xy[0], pol.exterior.xy[1])
+            # entsieglungs_patches.append(Polygon(np.array([x, y]).T))
+            # print(entsieglungs_patches[-1].exterior.coords[:])
+            entsieglungs_patches.append(pol)
             # breakpoint()
             n += 1
             # if len(entsieglungs_patches) > 0:
@@ -111,7 +111,8 @@ def import_width(data_street, index_street, width=7.6):
     A_potential = 0
     df_street = pd.read_csv(data_street, sep=";")
 
-    for i in index_street:
+    # for i in index_street:
+    for i in [25]:
         strassenkl = df_street["strassenkl"].loc[i]
         if "W" not in strassenkl:
             print(i, "/", len(index_street))
@@ -162,14 +163,15 @@ def import_width(data_street, index_street, width=7.6):
 
                 fig, ax = plt.subplots()
                 ax.plot(polygon.exterior.xy[0], polygon.exterior.xy[1], c='k')
-                for line in centerline:
-                    ax.plot(line.xy[0], line.xy[1], c='k')
-                # for ent_patch in entsieglungs_patches:
-                #     ax.plot(ent_patch.exterior.xy[0], ent_patch.exterior.xy[1], c='g')
+                # for line in centerline:
+                #     ax.plot(line.xy[0], line.xy[1], c='k')
+                for ent_patch in entsieglungs_patches:
+                    ax.plot(ent_patch.exterior.xy[0], ent_patch.exterior.xy[1], c='g')
                     # patch = PolygonPatch(ent_patch, fc="g", ec="g")
                     # ax.add_patch(patch)
                 ax.axis('off')
-                fig.savefig("../plots/centerline_" + str(i) + ".pdf", transparent=True)
+                # fig.savefig("../plots/centerline_" + str(i) + ".pdf", transparent=True)
+                fig.savefig("../plots/entsieglungen_" + str(i) + ".pdf", transparent=True)
                 # plt.show()
 
     return list_index
@@ -181,6 +183,3 @@ if __name__ == "__main__":
     path_begegnungszonen = "../data/begegnungszonen.csv"
     index_intersection = tp.import_intersection(path_strassenplan, path_data_30, path_begegnungszonen)
     index_width = import_width(path_strassenplan, index_intersection)
-    print(index_intersection)
-    print(index_width)
-    breakpoint()
