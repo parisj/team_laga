@@ -34,21 +34,22 @@ def ax_patch(ax, polygon, fc, ec):
     return 0
 
 
-def strd_osmnx_plot(town,city, **kwargs):
+def strd_osmnx_plot(town, country, **kwargs):
     """
     import file path of streets based on indices
     and create Multipoly    
-    Parameters
+    Parameters for osmnx.graph_from_place function
     ----------
-     indices: indices of Geo Shapes
-
+     town: String, name of town
+     country: String, name of country
     
-     file : path to csv file from OSM
+     **kwargs: for osmnx.graph_from_place
     
     
     Returns
     -------
-    poly_indices: shapely.geometrix Multipolynom
+    ax: axis of plot
+    fig: figure of plot
     """
     
     
@@ -56,6 +57,7 @@ def strd_osmnx_plot(town,city, **kwargs):
     fig, ax = ox.plot_graph(G, node_size=0, show=False)
     
     return fig, ax
+
 
 def point_osmnx_plot(coordinate, distance, **kwargs):
     """
