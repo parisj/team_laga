@@ -42,9 +42,9 @@ pip install -r requirements.txt
     
     
 ## 4.Authors
-  -Anton Paris
-  -Alexander Bruun
-  -Pierluigi Margarito
-  -Leart Sejdiu
+  - Anton Paris
+  - Alexander Bruun
+  - Pierluigi Margarito
+  - Leart Sejdiu
     
     
