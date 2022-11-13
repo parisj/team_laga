@@ -114,6 +114,8 @@ def import_width(data_street, index_street, width=7.6):
     """
     list_index = []
     A_potential = 0
+    A_street = 0
+    l_street = 0
     df_street = pd.read_csv(data_street, sep=";")
 
     for i in index_street:
@@ -142,6 +144,8 @@ def import_width(data_street, index_street, width=7.6):
             if width_lower_end >= width:
                 list_index.append(i)
                 A_potential += A_entsieglung
+                A_street += polygon.area
+                l_street += length
 
                 # entsieglungs_patches = find_unsealing_patches(np.array(polygon.exterior.coords), centerline, n_units)
 
@@ -176,6 +180,8 @@ def import_width(data_street, index_street, width=7.6):
                 # # plt.show()
 
     print(A_potential)
+    print(A_street)
+    print(l_street)
     return list_index
 
 
