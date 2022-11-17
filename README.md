@@ -1,6 +1,6 @@
 ### team_laga
 
-# Identifizierung Entsieglungspotenzial
+# Identifizierung von Entsieglungspotenzial
 
 ## Table of Content
 1. Project Description
